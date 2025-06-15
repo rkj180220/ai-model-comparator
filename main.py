@@ -9,7 +9,6 @@ load_dotenv() # Load .env file
 # --- Configuration ---
 API_KEYS = {
     "openai": os.getenv("OPENAI_API_KEY", ""),
-    "anthropic": os.getenv("ANTHROPIC_API_KEY", ""), # Remains for completeness or other uses
     "google": os.getenv("GOOGLE_API_KEY", ""),
 }
 
@@ -71,7 +70,6 @@ EVALUATION_PROMPTS = {
 
 def query_openai_model(model_id, prompt_text):
     """Sends a prompt to the OpenAI API and returns the response."""
-    # TODO: Implement using the openai Python library
     import openai
     client = openai.OpenAI(api_key=API_KEYS["openai"])
     try:
@@ -82,16 +80,9 @@ def query_openai_model(model_id, prompt_text):
         return chat_completion.choices[0].message.content
     except Exception as e:
         return f"OpenAI API Error: {str(e)}"
-    print(f"    SIMULATING OpenAI call for {model_id}")
-    return f"Simulated OpenAI response for: {prompt_text[:70]}..."
 
 def query_anthropic_model(model_id, prompt_text):
     """Sends a prompt to an Anthropic model via AWS Bedrock."""
-    # This function now uses AWS Bedrock for Anthropic models.
-    # Ensure AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and AWS_REGION_NAME
-    # are available as environment variables (e.g., in .env file) or configured for boto3.
-    # The model_id should be the Bedrock model identifier (e.g., "anthropic.claude-3-sonnet-20240229-v1:0")
-
     try:
         bedrock_runtime = boto3.client(
             service_name='bedrock-runtime',
@@ -100,11 +91,9 @@ def query_anthropic_model(model_id, prompt_text):
             # shared credentials file, or IAM role if not explicitly passed.
         )
 
-        # Claude 3 models on Bedrock use a specific payload structure.
-        # Refer to AWS Bedrock documentation for the exact payload for your model.
         body = json.dumps({
             "anthropic_version": "bedrock-2023-05-31", # Required for Claude 3
-            "max_tokens": 2048, # Adjust as needed
+            "max_tokens": 2048,
             "messages": [
                 {
                     "role": "user",
@@ -126,8 +115,6 @@ def query_anthropic_model(model_id, prompt_text):
         if response_body.get("content") and isinstance(response_body["content"], list) and len(response_body["content"]) > 0:
             return response_body["content"][0].get("text")
         else:
-            # Log the actual response_body for debugging if parsing fails
-            # print(f"    Bedrock response_body: {response_body}")
             return "Error: Could not parse response from Bedrock. Check response structure."
 
     except Exception as e:
@@ -135,12 +122,9 @@ def query_anthropic_model(model_id, prompt_text):
         # import traceback
         # print(traceback.format_exc())
         return f"AWS Bedrock (Anthropic) API Error: {str(e)}"
-    print(f"    SIMULATING Anthropic (Bedrock) call for {model_id}")
-    return f"Simulated Anthropic (Bedrock) response for: {prompt_text[:70]}..."
 
 def query_google_model(model_id, prompt_text):
     """Sends a prompt to the Google Generative AI API and returns the response."""
-    # TODO: Implement using the google.generativeai Python library
     import google.generativeai as genai
     genai.configure(api_key=API_KEYS["google"])
     model = genai.GenerativeModel(model_id)
@@ -149,12 +133,9 @@ def query_google_model(model_id, prompt_text):
         return response.text
     except Exception as e:
         return f"Google API Error: {str(e)}"
-    print(f"    SIMULATING Google call for {model_id}")
-    return f"Simulated Google response for: {prompt_text[:70]}..."
 
 def query_ollama_model(model_id, prompt_text):
     """Sends a prompt to a local Ollama API and returns the response."""
-    # TODO: Implement using the requests library
     import requests
     payload = {"model": model_id, "prompt": prompt_text, "stream": False}
     try:
@@ -165,8 +146,6 @@ def query_ollama_model(model_id, prompt_text):
         return f"Ollama API Error: {str(e)}"
     except KeyError:
          return "Ollama API Error: Malformed JSON response from Ollama."
-    print(f"    SIMULATING Ollama call for {model_id}")
-    return f"Simulated Ollama response for: {prompt_text[:70]}..."
 
 # --- Evaluation Runner ---
 def run_evaluation():
@@ -241,7 +220,7 @@ def run_evaluation():
 
     return raw_results_filename, evaluation_results
 
-# --- Helper for Markdown Generation (Example) ---
+# --- Helper for Markdown Generation ---
 def generate_markdown_from_annotated_results(annotated_results_file):
     try:
         with open(annotated_results_file, 'r') as f:
