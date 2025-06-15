@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+pip-wheel-metadata/
+.idea/
+
+# Environment variables
+.env
+
+#ai_evaluation_raw_results_*.json
+#*_report.md
+
+# macOS
+.DS_Store
