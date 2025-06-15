@@ -28,8 +28,6 @@ This script automates the process of evaluating various AI language models based
     *   Populate the `.env` file with your API keys:
         ```dotenv
         OPENAI_API_KEY="your_openai_api_key"
-        # ANTHROPIC_API_KEY is not directly used if using Bedrock, but good to have if you plan to use Anthropic's direct API elsewhere.
-        # ANTHROPIC_API_KEY="your_anthropic_api_key"
         GOOGLE_API_KEY="your_google_ai_studio_api_key"
 
         # For AWS Bedrock (used for Anthropic models in this script)
@@ -44,12 +42,12 @@ This script automates the process of evaluating various AI language models based
     *   If using AWS Bedrock, ensure your AWS CLI is configured with the necessary credentials and permissions to invoke Bedrock models. The script uses `boto3`, which can pick up credentials from shared AWS credential files (`~/.aws/credentials`), environment variables, or IAM roles.
 5.  **Ollama (Optional)**:
     *   If you plan to evaluate models using Ollama, ensure Ollama is installed and running locally.
-    *   Pull the models you want to test using the Ollama CLI (e.g., `ollama pull llama3`).
+    *   Pull the models you want to test using the Ollama CLI (e.g., `ollama pull deepseek-r1:7b`).
     *   Make sure the `OLLAMA_API_URL` in your `.env` file points to your running Ollama instance. The default is usually `http://localhost:11434/api/generate`.
 
 ## Setup
 
-1.  **Clone the repository** (if applicable) or ensure you have the script (`ai_model_evaluation.py`) and `requirements.txt` in your project directory.
+1.  **Clone the repository**  or ensure you have the script (`main.py`) and `requirements.txt` in your project directory.
 2.  **Install dependencies**:
     ```bash
     pip install -r requirements.txt
@@ -67,26 +65,10 @@ Open the `ai_model_evaluation.py` script and modify the following sections as ne
     *   This list defines which models will be queried. Each entry is a dictionary:
         ```python
         MODELS_TO_EVALUATE = [
-            {
-                "name": "GPT-4o (OpenAI)", # User-friendly name for reports
-                "type": "openai",         # 'openai', 'anthropic', 'google', or 'ollama'
-                "model_id": "gpt-4o"      # Actual model ID for the API
-            },
-            {
-                "name": "Claude 3 Sonnet (Bedrock)",
-                "type": "anthropic", # This uses the Bedrock client for Anthropic
-                "model_id": "anthropic.claude-3-sonnet-20240229-v1:0"
-            },
-            {
-                "name": "Gemini 1.5 Flash (Google)",
-                "type": "google",
-                "model_id": "gemini-1.5-flash-latest"
-            },
-            {
-                "name": "Llama3 8b (Ollama)",
-                "type": "ollama",
-                "model_id": "llama3:8b" # Ensure this model is pulled in Ollama
-            },
+              {"name": "GPT-4o", "type": "openai", "model_id": "gpt-4o"},
+              {"name": "Claude Sonnet (Bedrock)", "type": "anthropic", "model_id": "anthropic.claude-3-sonnet-20240229-v1:0"},
+              {"name": "Gemini Flash", "type": "google", "model_id": "gemini-1.5-flash-latest"},
+              {"name": "DeepSeek R1 7b", "type": "ollama", "model_id": "deepseek-r1:7b"}
             # Add more models as needed
         ]
         ```
