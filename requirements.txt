@@ -1,6 +1,5 @@
 python-dotenv
 openai
-# anthropic # You might not need the direct Anthropic SDK if using Bedrock
 google-generativeai
 requests
 boto3
